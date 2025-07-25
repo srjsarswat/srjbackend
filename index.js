@@ -19,11 +19,17 @@ connectDB();
 const app = express();
 
 // ✅ Use FRONTEND_URL from .env for CORS
-const FRONTEND_URL = process.env.FRONTEND_URL;
+const FRONTEND_URLS = process.env.FRONTEND_URLS?.split(',') || [];
 
 app.use(cors({
-  origin: FRONTEND_URL,
-  credentials: true, // allow cookies / auth headers
+  origin: function (origin, callback) {
+    if (!origin || FRONTEND_URLS.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
 }));
 
 // Middlewares
