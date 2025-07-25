@@ -18,23 +18,10 @@ connectDB();
 // Initialize Express
 const app = express();
 
-// ✅ Setup multiple allowed frontend origins from .env
-const allowedOrigins = [
-  process.env.USER_FRONTEND_URL,
-  process.env.ADMIN_FRONTEND_URL,
-].filter(Boolean); // remove undefined/null entries
-
-// ✅ CORS Middleware
+// ✅ Allow all origins (CORS) with credentials
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.error(`❌ CORS blocked: ${origin}`);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
+  origin: true, // Reflects the request origin
+  credentials: true, // Allow cookies and auth headers
 }));
 
 // Middlewares
