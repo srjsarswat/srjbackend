@@ -5,43 +5,45 @@ import categoryRoutes from './routes/categoryRoutes.js';
 import productRoutes from './routes/productRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import adminRoutes from './routes/adminAuthRoutes.js';
-import cors from 'cors';
 import paymentRoutes from './routes/paymentRoutes.js';
+import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
+// Load environment variables
 dotenv.config();
+
+// Connect to MongoDB
 connectDB();
 
+// Initialize Express
 const app = express();
 
-const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174'];
+// ✅ Use FRONTEND_URL from .env for CORS
+const FRONTEND_URL = process.env.FRONTEND_URL;
 
-// ✅ Fixed CORS config
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true); // allow request
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true, // if you're using cookies/auth headers
+  origin: FRONTEND_URL,
+  credentials: true, // allow cookies / auth headers
 }));
 
+// Middlewares
 app.use(cookieParser());
-
 app.use(express.json());
 
-// ✅ API routes
+// ✅ API Routes
 app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/payment', paymentRoutes);
 
+// Default route
 app.get('/', (req, res) => {
   res.send('API is running...');
 });
 
+// Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
