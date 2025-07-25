@@ -18,14 +18,19 @@ connectDB();
 // Initialize Express
 const app = express();
 
-// ✅ Use FRONTEND_URL from .env for CORS
-const FRONTEND_URLS = process.env.FRONTEND_URLS?.split(',') || [];
+// ✅ Setup multiple allowed frontend origins from .env
+const allowedOrigins = [
+  process.env.USER_FRONTEND_URL,
+  process.env.ADMIN_FRONTEND_URL,
+].filter(Boolean); // remove undefined/null entries
 
+// ✅ CORS Middleware
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || FRONTEND_URLS.includes(origin)) {
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.error(`❌ CORS blocked: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -51,5 +56,5 @@ app.get('/', (req, res) => {
 // Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
