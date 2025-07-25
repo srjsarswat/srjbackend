@@ -15,10 +15,10 @@ const router = express.Router();
 router.post('/create', createAdmin); // ❗One-time use
 router.post('/login', loginAdmin);
 router.post('/logout', logoutAdmin);
-router.get('/users', verifyAdmin, getAllUsers);
-router.delete('/users/:id', verifyAdmin, deleteUser);
-router.get('/stats', verifyAdmin, getAdminStats);
-router.get('/orders', verifyAdmin, getAllOrders);
+router.get('/users', getAllUsers);
+router.delete('/users/:id', deleteUser);
+router.get('/stats', getAdminStats);
+router.get('/orders', getAllOrders);
 
 
 export default router;
